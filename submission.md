@@ -1,5 +1,5 @@
 # CarND - Semantic Segmentation Rubrics
-The goal of this project is to construct a fully convolutional neural network based on the VGG-16 image classifier architecture for performing semantic segmentation to identify drivable road area from an car dashcam image (trained and tested on the KITTI data set).
+In this project, the goal is to label the pixels of a road in images using a Fully Convolutional Network (FCN). A pretrained VGG-16 network is used as a base model and trained & tested on the KITTI data set.
 
 ## Neural Network Architecture
 A pre-trained VGG-16 network was converted to a fully convolutional network by converting the final fully connected layer to a 1x1 convolution and setting the depth equal to the number of desired classes (in this case, 2: road and not-road). Performance is improved through the use of skip connections, performing 1x1 convolutions on previous VGG layers (in this case, layers 3 and 4) and adding them element-wise to upsampled (through transposed convolution) lower-level layers (i.e. the 1x1-convolved layer 7 is upsampled before being added to the 1x1-convolved layer 4). Each convolution and transpose convolution layer includes a kernel initializer and regularizer.
@@ -10,15 +10,18 @@ The loss function for the network is `cross-entropy`, and an `Adam optimizer` is
 ## Rubric Points
 
 #### Does the project load the pretrained vgg model?
-The pretrained `vgg` model is downloaded using helper fuction and loaded using Tensorflow API (v1.3.0) `tf.saved_model.loader.load()`. The function `load_vgg` at `main.py` is implemented to get references to important layers. See [load_vgg](main.py#L23..L46) implementation.
+The function `load_vgg` loads `vgg` model.
 
 #### Does the project learn the correct features from the images?
+The project has `layers` function implemented.
 
 #### Does the project optimize the neural network?
+The project has `optimize` function implemented.
 
 #### Does the project train the neural network?
+The function `train_nn` is implemented correctly. The loss of the network should be printed while the network is training.
 
-### Does the project train the model correctly?
+Sample output:
 ```
 Model build successful, starting training
 -----------------------
@@ -56,6 +59,9 @@ Model build successful, starting training
 |      30 |     0.027 |
 ```
 
+### Does the project train the model correctly?
+As seen from above output sample, the model decreases loss over time.
+
 ### Does the project use reasonable hyperparameters?
 
 The hyperparameters used for training are:
@@ -65,3 +71,4 @@ The hyperparameters used for training are:
 * batch_size: 8
 
 ### Does the project correctly label the road?
+Yes, the project labels most pixels of roads close to the best solution.
