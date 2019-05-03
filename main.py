@@ -217,7 +217,7 @@ def run():
         print("Model build successful, starting training")
 
         # TODO: Train NN using the train_nn function
-        epochs = 30
+        epochs = 50
         batch_size = 8
 
         sess.run(tf.global_variables_initializer())

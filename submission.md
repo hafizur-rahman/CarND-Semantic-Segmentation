@@ -27,36 +27,56 @@ Model build successful, starting training
 -----------------------
 | Epoch # | Avg. Loss |
 -----------------------
-|       1 |     0.710 |
-|       2 |     0.295 |
-|       3 |     0.172 |
-|       4 |     0.142 |
-|       5 |     0.116 |
-|       6 |     0.111 |
-|       7 |     0.089 |
-|       8 |     0.082 |
-|       9 |     0.070 |
-|      10 |     0.066 |
-|      11 |     0.059 |
-|      12 |     0.053 |
-|      13 |     0.051 |
-|      14 |     0.050 |
-|      15 |     0.046 |
-|      16 |     0.044 |
-|      17 |     0.040 |
-|      18 |     0.038 |
-|      19 |     0.037 |
-|      20 |     0.036 |
-|      21 |     0.062 |
-|      22 |     0.049 |
-|      23 |     0.037 |
+|       1 |     0.788 |
+|       2 |     0.467 |
+|       3 |     0.171 |
+|       4 |     0.146 |
+|       5 |     0.130 |
+|       6 |     0.117 |
+|       7 |     0.110 |
+|       8 |     0.097 |
+|       9 |     0.085 |
+|      10 |     0.077 |
+|      11 |     0.076 |
+|      12 |     0.063 |
+|      13 |     0.063 |
+|      14 |     0.056 |
+|      15 |     0.051 |
+|      16 |     0.047 |
+|      17 |     0.056 |
+|      18 |     0.049 |
+|      19 |     0.043 |
+|      20 |     0.041 |
+|      21 |     0.038 |
+|      22 |     0.038 |
+|      23 |     0.035 |
 |      24 |     0.034 |
 |      25 |     0.033 |
-|      26 |     0.031 |
-|      27 |     0.030 |
-|      28 |     0.029 |
-|      29 |     0.028 |
-|      30 |     0.027 |
+|      26 |     0.032 |
+|      27 |     0.031 |
+|      28 |     0.031 |
+|      29 |     0.032 |
+|      30 |     0.036 |
+|      31 |     0.030 |
+|      32 |     0.028 |
+|      33 |     0.026 |
+|      34 |     0.025 |
+|      35 |     0.025 |
+|      36 |     0.024 |
+|      37 |     0.024 |
+|      38 |     0.023 |
+|      39 |     0.023 |
+|      40 |     0.023 |
+|      41 |     0.022 |
+|      42 |     0.021 |
+|      43 |     0.020 |
+|      44 |     0.021 |
+|      45 |     0.020 |
+|      46 |     0.019 |
+|      47 |     0.019 |
+|      48 |     0.019 |
+|      49 |     0.019 |
+|      50 |     0.018 |
 ```
 
 ### Does the project train the model correctly?
@@ -67,8 +87,14 @@ As seen from above output sample, the model decreases loss over time.
 The hyperparameters used for training are:
 * keep_prob: 0.8
 * learning_rate: 0.0001
-* epochs: 30
+* epochs: 50
 * batch_size: 8
 
 ### Does the project correctly label the road?
-Yes, the project labels most pixels of roads close to the best solution.
+Below are a few sample images from the output of the fully convolutional network, with the segmentation class overlaid upon the original image in green.
+
+![sample1](./sample1.png)
+![sample2](./sample2.png)
+![sample3](./sample3.png)
+![sample4](./sample4.png)
+![sample5](./sample5.png)
