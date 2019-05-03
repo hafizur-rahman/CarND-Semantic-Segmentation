@@ -165,6 +165,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     lr = 0.0001
     
+    print("-----------------------\n| Epoch # | Avg. Loss |\n-----------------------")    
     for epoch in range(epochs):
         training_loss = 0
         training_samples = 0
@@ -178,7 +179,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
 
         training_loss /= training_samples
 
-        print("EPOCH {}: Average loss for the current epoch = {:.3f}\n".format(epoch + 1, training_loss))
+        print("| {:7d} |     {:.3f} |".format(epoch + 1, training_loss))
 tests.test_train_nn(train_nn)
 
 def run():
@@ -231,8 +232,7 @@ def run():
         save_path = saver.save(sess, model_path)
         print("Model is saved to file: %s" % save_path)
 
-        # TODO: Save inference data using helper.save_inference_samples
-        #  helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
+        # TODO: Save inference data using helper.save_inference_samples        
         helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
 
         # OPTIONAL: Apply the trained model to a video
