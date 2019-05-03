@@ -1,55 +1,67 @@
 # CarND - Semantic Segmentation Rubrics
+The goal of this project is to construct a fully convolutional neural network based on the VGG-16 image classifier architecture for performing semantic segmentation to identify drivable road area from an car dashcam image (trained and tested on the KITTI data set).
 
-## Build the Neural Network
-### Does the project load the pretrained vgg model?
-The pretrained `vgg` model is downloaded using helper fuction and loaded using Tensorflow API (v1.3.0) `tf.saved_model.loader.load()`. The function `load_vgg` at `main.py` is implemented to get references to important layers. See [load_vgg](main.py#23-46) implementation.
+## Neural Network Architecture
+A pre-trained VGG-16 network was converted to a fully convolutional network by converting the final fully connected layer to a 1x1 convolution and setting the depth equal to the number of desired classes (in this case, 2: road and not-road). Performance is improved through the use of skip connections, performing 1x1 convolutions on previous VGG layers (in this case, layers 3 and 4) and adding them element-wise to upsampled (through transposed convolution) lower-level layers (i.e. the 1x1-convolved layer 7 is upsampled before being added to the 1x1-convolved layer 4). Each convolution and transpose convolution layer includes a kernel initializer and regularizer.
 
-### Does the project learn the correct features from the images?
+### Optimizer
+The loss function for the network is `cross-entropy`, and an `Adam optimizer` is used.
 
-### Does the project optimize the neural network?
+## Rubric Points
 
-### Does the project train the neural network?
+#### Does the project load the pretrained vgg model?
+The pretrained `vgg` model is downloaded using helper fuction and loaded using Tensorflow API (v1.3.0) `tf.saved_model.loader.load()`. The function `load_vgg` at `main.py` is implemented to get references to important layers. See [load_vgg](main.py#L23..L46) implementation.
 
-## Neural Network Training
+#### Does the project learn the correct features from the images?
+
+#### Does the project optimize the neural network?
+
+#### Does the project train the neural network?
+
 ### Does the project train the model correctly?
-
 ```
 Model build successful, starting training
-EPOCH 1: Average loss for the current epoch = 0.803
-EPOCH 2: Average loss for the current epoch = 0.487
-EPOCH 3: Average loss for the current epoch = 0.178
-EPOCH 4: Average loss for the current epoch = 0.147
-EPOCH 5: Average loss for the current epoch = 0.129
-EPOCH 6: Average loss for the current epoch = 0.109
-EPOCH 7: Average loss for the current epoch = 0.095
-EPOCH 8: Average loss for the current epoch = 0.091
-EPOCH 9: Average loss for the current epoch = 0.082
-EPOCH 10: Average loss for the current epoch = 0.070
-EPOCH 11: Average loss for the current epoch = 0.065
-EPOCH 12: Average loss for the current epoch = 0.068
-EPOCH 13: Average loss for the current epoch = 0.062
-EPOCH 14: Average loss for the current epoch = 0.056
-EPOCH 15: Average loss for the current epoch = 0.052
-EPOCH 16: Average loss for the current epoch = 0.048
-EPOCH 17: Average loss for the current epoch = 0.046
-EPOCH 18: Average loss for the current epoch = 0.044
-EPOCH 19: Average loss for the current epoch = 0.042
-EPOCH 20: Average loss for the current epoch = 0.039
-EPOCH 21: Average loss for the current epoch = 0.038
-EPOCH 22: Average loss for the current epoch = 0.036
-EPOCH 23: Average loss for the current epoch = 0.035
-EPOCH 24: Average loss for the current epoch = 0.037
-EPOCH 25: Average loss for the current epoch = 0.037
-EPOCH 26: Average loss for the current epoch = 0.047
-EPOCH 27: Average loss for the current epoch = 0.037
-EPOCH 28: Average loss for the current epoch = 0.033
-EPOCH 29: Average loss for the current epoch = 0.031
-EPOCH 30: Average loss for the current epoch = 0.030
+-----------------------
+| Epoch # | Avg. Loss |
+-----------------------
+|       1 |     0.710 |
+|       2 |     0.295 |
+|       3 |     0.172 |
+|       4 |     0.142 |
+|       5 |     0.116 |
+|       6 |     0.111 |
+|       7 |     0.089 |
+|       8 |     0.082 |
+|       9 |     0.070 |
+|      10 |     0.066 |
+|      11 |     0.059 |
+|      12 |     0.053 |
+|      13 |     0.051 |
+|      14 |     0.050 |
+|      15 |     0.046 |
+|      16 |     0.044 |
+|      17 |     0.040 |
+|      18 |     0.038 |
+|      19 |     0.037 |
+|      20 |     0.036 |
+|      21 |     0.062 |
+|      22 |     0.049 |
+|      23 |     0.037 |
+|      24 |     0.034 |
+|      25 |     0.033 |
+|      26 |     0.031 |
+|      27 |     0.030 |
+|      28 |     0.029 |
+|      29 |     0.028 |
+|      30 |     0.027 |
 ```
 
 ### Does the project use reasonable hyperparameters?
 
-No of epochs: 30
-Batch size: 8
+The hyperparameters used for training are:
+* keep_prob: 0.8
+* learning_rate: 0.0001
+* epochs: 30
+* batch_size: 8
 
 ### Does the project correctly label the road?

@@ -17,8 +17,6 @@ if not tf.test.gpu_device_name():
 else:
     print('Default GPU Device: {}'.format(tf.test.gpu_device_name()))
 
-model_path='./model/model.ckpt'
-
 
 def load_vgg(sess, vgg_path):
     """
@@ -227,10 +225,6 @@ def run():
 
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
                  correct_label, keep_prob, learning_rate)
-
-        saver = tf.train.Saver()
-        save_path = saver.save(sess, model_path)
-        print("Model is saved to file: %s" % save_path)
 
         # TODO: Save inference data using helper.save_inference_samples        
         helper.save_inference_samples(runs_dir, data_dir, sess, image_shape, logits, keep_prob, input_image)
