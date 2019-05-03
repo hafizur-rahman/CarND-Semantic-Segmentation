@@ -34,7 +34,7 @@ def load_vgg(sess, vgg_path):
     vgg_layer4_out_tensor_name = 'layer4_out:0'
     vgg_layer7_out_tensor_name = 'layer7_out:0'
     
-    tf.saved_model.load(sess, [vgg_tag], vgg_path)
+    tf.saved_model.loader.load(sess, [vgg_tag], vgg_path)
     graph = tf.get_default_graph()
 
     image_input = graph.get_tensor_by_name(vgg_input_tensor_name)
@@ -44,7 +44,8 @@ def load_vgg(sess, vgg_path):
     vgg_layer7_out = graph.get_tensor_by_name(vgg_layer7_out_tensor_name)
 
     return image_input, keep_prob, vgg_layer3_out, vgg_layer4_out, vgg_layer7_out
-    
+tests.test_load_vgg(load_vgg, tf)
+
 
 def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
@@ -61,25 +62,53 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # Upsample fcn_encoder_last_conv to match size of layer 4 so that we can add skip connection with 4th layer
     fcn_decoder_layer1 = tf.layers.conv2d_transpose(
-        fcn_encoder_last_conv, num_classes, kernel_size=4, strides=(2, 2),
+        inputs=fcn_encoder_last_conv,
+        filters=num_classes,
+        kernel_size=4,
+        strides=(2, 2),
         padding='same',
         kernel_initializer=tf.random_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_layer1')
 
+    # 1x1 conv on vgg_layer4_out
+    conv_layer_4_1x1 = tf.layers.conv2d(
+        inputs=vgg_layer4_out,
+        filters=num_classes,
+        kernel_size=1,
+        strides=1,
+        padding='same',
+        kernel_initializer=tf.random_normal_initializer(stddev=0.01),
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-4)
+    )
+
     # Add a skip connection between current final layer fcn_decoder_layer1 and 4th layer
     fcn_decoder_layer2 = tf.add(
-        fcn_decoder_layer1, vgg_layer4_out, name='fcn_decoder_layer2')
+        fcn_decoder_layer1, conv_layer_4_1x1, name='fcn_decoder_layer2')
 
     # then follow this with another transposed convolution layer and make shape the same as layer3
     fcn_decoder_layer3 = tf.layers.conv2d_transpose(
-        fcn_decoder_layer2, num_classes, kernel_size=4, strides=(2, 2),
+        inputs=fcn_decoder_layer2,
+        filters=num_classes,
+        kernel_size=4,
+        strides=(2, 2),
         padding='same',
         kernel_initializer=tf.random_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_layer3')
 
+    # 1x1 conv on vgg_layer4_out
+    layer3_conv_1x1 = tf.layers.conv2d(
+        inputs=vgg_layer3_out,
+        filters=num_classes,
+        kernel_size=1,
+        strides=1,
+        padding='same',
+        kernel_initializer=tf.random_normal_initializer(stddev=0.01),
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-4)
+    )
+
     # Add skip connection
     fcn_decoder_layer4 = tf.add(
-        fcn_decoder_layer3, vgg_layer3_out, name='fcn_decoder_layer4')
+        fcn_decoder_layer3, layer3_conv_1x1, name='fcn_decoder_layer4')
 
     # Upsample again to match input image size
     fcn_decoder_output = tf.layers.conv2d_transpose(
@@ -89,6 +118,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-4), name='fcn_decoder_output')
 
     return fcn_decoder_output
+tests.test_layers(layers)
 
 
 def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
@@ -115,6 +145,7 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     train_op = optimizer.minimize(cross_entropy_loss)
 
     return logits, train_op, loss_op
+tests.test_optimize(optimize)
 
 
 def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
@@ -148,7 +179,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         training_loss /= training_samples
 
         print("EPOCH {}: Average loss for the current epoch = {:.3f}\n".format(epoch + 1, training_loss))
-
+tests.test_train_nn(train_nn)
 
 def run():
     num_classes = 2
@@ -208,10 +239,4 @@ def run():
 
 
 if __name__ == '__main__':
-    # run unittest before training
-    tests.test_load_vgg(load_vgg, tf)
-    tests.test_layers(layers)
-    tests.test_optimize(optimize)
-    tests.test_train_nn(train_nn)
-
     run()
